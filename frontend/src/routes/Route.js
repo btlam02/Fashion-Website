@@ -8,6 +8,7 @@ import ProductPage from "../components/productPage/ProductPage";
 import Cart from "../components/cart/Cart";
 import Checkout from "../components/checkoutPage/Checkout";
 import Confirmation from "../components/checkoutPage/Confirmation";
+import LoginPage from "../components/loginPage/LoginPage";
 
 export default function MyRouter() {
   return (
@@ -44,6 +45,11 @@ export default function MyRouter() {
             // exact
             path='/groupproject/checkout/confirm'
             element={<Confirmation />}
+          />
+          <Route
+            // exact
+            path='/groupproject/signin'
+            element={<LoginPage />}
           />
           <Route exact path='/groupproject/cart' element={<Cart />} />
         </Route>
