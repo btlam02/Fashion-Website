@@ -4,7 +4,7 @@ import xButton from "../../../assets/images/x-button.svg";
 import arrow from "../../../assets/images/arrow.svg";
 import globe from "../../../assets/images/globe.svg";
 import { ReactComponent as SearchBtn } from "../../../assets/images/search.svg";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const StyledSideMenu = styled.div`
   * {
@@ -266,7 +266,13 @@ export default function NavSideMenu({
             <div className='secondarySideMenuNav'>
               <ul>
                 <li>Shop FAQ</li>
-                <li>Sign In</li>
+                <li onClick={() => (
+                  setShowSideMenu(false),
+                  navigate("/groupproject/signin")
+                  )}
+                >
+                  Sign In
+                </li>
                 <li className='languageSelector'>
                   <img src={globe} alt='' />
                   <div>

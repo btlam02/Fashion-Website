@@ -10,6 +10,7 @@ const StyledCheckoutPage = styled.div`
     padding: 0;
     box-sizing: border-box;
   }
+  color: black;
   padding-top: 160px;
   max-width: 362px;
   margin: auto;
@@ -64,7 +65,7 @@ const StyledCheckoutPage = styled.div`
         background: none;
       }
       &::before {
-        content: "Please enter valid email address";
+        content: "Please enter valid value";
         opacity: ${({ valid }) => (valid ? "0" : "1")};
         position: absolute;
         bottom: 0px;
@@ -171,31 +172,33 @@ const StyledCheckoutPage = styled.div`
 
 export default function LoginPage() {
   const [justChecking, setJustChecking] = useState(false);
-  const [input, setInput] = useState("");
   const [valid, setValid] = useState(true);
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
   const navigate = useNavigate();
-
-  const sendRequest = async () => {
-    const response = await axios.post("http://localhost:5000/api/login", {
-      email,
-      password,
-    });
-    console.log(response);
-  }
 
   const validateEmail = () => {
     let regexp =
       /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    if (input.length) {
-      setValid(regexp.test(String(input).toLowerCase()));
+    if (email.length) {
+      setValid(regexp.test(String(email).toLowerCase()));
       return true;
     }
     setValid(false);
     return false;
+  };
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const sendRequest = async () => {
+    const response = await axios.post(
+      "http://localhost:5000/groupproject/api/login",
+      {
+        email: email,
+        password: password,
+      }
+    );
+    console.log(response);
   };
 
   return (
@@ -208,26 +211,26 @@ export default function LoginPage() {
         <div className='checkout-email-sign-in-input'>
           <input
             type='text'
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
+            value={email}
+            onChange={(e) => (
+              setEmail(e.target.value), console.log(e.target.value)
+            )}
             onBlur={validateEmail}
           />
-        
         </div>
-        <p className='checkout-email-sign-in-title'>
-          Password <button className='email-info-button'>i</button>
-        </p>
+        <p className='checkout-email-sign-in-title'>Password</p>
         <div className='checkout-email-sign-in-input'>
-          <input type='password' />
+          <input type='password' 
+            value={password}
+            onChange={(e) => (
+              setPassword(e.target.value), console.log(e.target.value)
+            )}
+          />
         </div>
-        <p className='checkout-email-sign-in-title'>
-          <input type='checkbox' />
-          Keep me signed in
-        </p>
         <button
           className='checkout-sign-in-button'
           onClick={() => {
-            validateEmail() && navigate("confirm");
+            validateEmail() && sendRequest();
           }}
         >
           CONTINUE
@@ -238,15 +241,15 @@ export default function LoginPage() {
           <p>Forgot password?</p>
         </div>
       </div>
-      {/* <hr className='checkout-sign-in-divider' />
+      <hr className='checkout-sign-in-divider' />
       <div className='guest-checkout'>
-        <h1>Guest Checkout</h1>
-        <p>
-          You'll have the opportunity to create an account after you complete
-          checkout.
+        <p style={{
+          textAlign: "center",
+        }}>
+          If you don't have an account, you can register here.
         </p>
-        <button onClick={() => navigate("confirm")}>CONTINUE AS GUEST</button>
-      </div> */}
+        <button onClick={() => navigate("/groupproject/signup")}>REGISTER HERE</button>
+      </div>
     </StyledCheckoutPage>
   );
 }

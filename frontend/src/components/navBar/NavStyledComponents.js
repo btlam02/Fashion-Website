@@ -15,13 +15,14 @@ export const StyledNav = styled.nav`
   padding: 5px;
   /* height: 48px; */
   top: 0px;
-  color: white;
+  color: black;
+  background-color: white;
   transition: all 0.1s;
   z-index: 2;
   pointer-events: default;
   flex-wrap: wrap;
   svg {
-    fill: white;
+    fill: black;
   }
 
   hr {
