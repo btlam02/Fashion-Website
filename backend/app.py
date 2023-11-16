@@ -3,12 +3,10 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 #requirements for database connection 
-from dotenv import load_dotenv
 import os
 
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY")
-
 
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
 db = SQLAlchemy(app)
@@ -26,6 +24,7 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
     role = db.Column(db.String(20), nullable=False, default ='user')
+
 
 
 
@@ -74,12 +73,14 @@ def login():
     return render_template('login.html')
 
 
+
 # Đường dẫn đăng xuất
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('home_base'))
+
 
 
 # Đường dẫn bảng điều khiển
@@ -93,11 +94,17 @@ def home():
         # Trang bảng điều khiển cho user
         return render_template('./user/home_user.html')
 
+
+
 @app.route('/')
 def home_base(): 
     return render_template('home.html')
 
 
+
+
 if __name__ == '__main__':
     db.create_all()
     app.run(debug=True)
+
+
