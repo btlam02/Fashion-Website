@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const StyledCheckoutPage = styled.div`
   * {
@@ -173,7 +174,18 @@ export default function LoginPage() {
   const [input, setInput] = useState("");
   const [valid, setValid] = useState(true);
 
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
   const navigate = useNavigate();
+
+  const sendRequest = async () => {
+    const response = await axios.post("http://localhost:5000/api/login", {
+      email,
+      password,
+    });
+    console.log(response);
+  }
 
   const validateEmail = () => {
     let regexp =
