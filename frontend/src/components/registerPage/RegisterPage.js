@@ -230,6 +230,7 @@ export default function RegisterPage() {
             onChange={(e) => setEmail(e.target.value)}
             onBlur={validateEmail}
           />
+
         </div>
         <p className='checkout-email-sign-in-title'>Password</p>
         <div className='checkout-email-sign-in-input'>

@@ -1,10 +1,11 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Modal } from "@mui/material";
+import Webcam from "react-webcam";
 
-
+// Tương tự FaceLoginPage, bạn có thể sử dụng StyledComponents để tạo CSS cho trang này
 
 const StyledCheckoutPage = styled.div`
   * {
@@ -191,18 +192,17 @@ const modalStyle = {
     },
   };
 
-
-
-export default function FaceRegisterPage() {
-  const [email, setEmail] = useState("");
+const RegisterFacePage = () => {
   const [valid, setValid] = useState(true);
-  const [error, setError] = useState(null);
   const [justChecking, setJustChecking] = useState(false);
-  const [image, setImage] = useState(null)
   const [showModal, setShowModal] = useState(false);
-  const videoRef = useRef(null); 
-  
+  const [email, setEmail] = useState(""); // Chỉ ví dụ, bạn có thể có các trường dữ liệu khác
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
+  const [image, setImage] = useState(null);
+
   const navigate = useNavigate();
+
   const validateEmail = () => {
     let regexp =
       /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -214,45 +214,36 @@ export default function FaceRegisterPage() {
     return false;
   };
 
-  const startCamera = async ()=>{
-    const stream = await navigator.mediaDevices.getUserMedia({video:true}); 
-    videoRef.current.srcObject = stream; 
-  }; 
-
-  const captureImage = async () => {
-    const canvas = document.createElement('canvas');
-    const context = canvas.getContext('2d');
-    canvas.width = videoRef.current.videoWidth;
-    canvas.height = videoRef.current.videoHeight;
-    context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
-    const dataUrl = canvas.toDataURL('image/jpeg');
-    setImage(dataUrl);
-
+  const sendRequest = async () => {
     try {
-        const response = await fetch('http://localhost:5000/faceregister', {
-            method: 'POST',
+        if (validateEmail()) {
+          const response = await fetch("http://127.0.0.1:5000/faceregister", {
+            method: "POST",
             headers: {
-              'Content-Type': 'application/json',
+              "Content-Type": "application/json",
             },
-            body: JSON.stringify({ email: email, image: dataUrl }),
+            body: JSON.stringify({ email: email, password: password , image: image}),
           });
-    
+  
           if (response.ok) {
-            const result = await response.json();
-            console.log(result.message); 
+            // Đăng ký thành công
+            navigate("/groupproject"); // Chuyển hướng đến trang đăng nhập sau khi đăng ký thành công
           } else {
-            console.error('Facial recognition failed');
+            // Xử lý lỗi khi đăng ký không thành công
+            const errorData = await response.json();
+            setError(errorData.error || "Đăng ký không thành công!");
           }
-    } catch (error) {
-      console.error("Error:", error);
-      setError("An error occurred while processing the request.");
-    }
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        setError("Đã xảy ra lỗi trong quá trình xử lý yêu cầu.");
+      }
   };
 
   return (
     <StyledCheckoutPage valid={valid} justChecking={justChecking}>
-    {/* <div className='checkout-sign-in'>
-        <h1>Sign Up by Face</h1>
+      <div className='checkout-sign-in'>
+        <h1>Sign up by Face</h1>
         <p className='checkout-email-sign-in-title'>
           Email Address <button className='email-info-button'>i</button>
         </p>
@@ -266,12 +257,19 @@ export default function FaceRegisterPage() {
             onBlur={validateEmail}
           />
         </div>
+        <p className='checkout-email-sign-in-title'>Password</p>
+        <div className='checkout-email-sign-in-input'>
+          <input type='password' 
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
+
+
         <button
           className='checkout-sign-in-button'
           onClick={() => {
-            <video ref={videoRef} autoPlay />
             validateEmail() && setShowModal(true);
-            startCamera() && captureImage(); 
           }}
         >
           CONTINUE
@@ -282,9 +280,9 @@ export default function FaceRegisterPage() {
         <p style={{
           textAlign: "center",
         }}>
-          If you don't have an account, you can register here.
+          If you have an account, you can login here.
         </p>
-        <button onClick={() => navigate("/groupproject/signup")}>REGISTER NORMAL HERE</button>
+        <button onClick={() => navigate("/groupproject/signin")}>REGISTER HERE</button>
       </div>
       <Modal
         open={showModal}
@@ -300,45 +298,43 @@ export default function FaceRegisterPage() {
             backgroundColor: "white",
             borderRadius: "4px",
         }}>
-          <h1>Face Register</h1>
-          <p>Face Register is not available at this time.</p>
-          <button onClick={() => setShowModal(false)} style={{
-                backgroundColor: "#3D69E1",
-                color: "white",
-                border: "none",
-                borderRadius: "4px",
-                padding: "8px",
-          }}>OK</button>
-        </div>
-        </Modal> */}
-    
-    <div>
-      <video ref={videoRef} autoPlay 
-      style={{
+          <h1>Face Sign Up</h1>
+          <Webcam />
+          <div style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: "16px",
+          }}>
+            <button style={{
+              backgroundColor: "#3d69e1",
+              color: "white",
+              border: "none",
+              borderRadius: "4px",
+              padding: "8px",
+            
+            }} onClick={() => {
+              setShowModal(false);
+              sendRequest();
+              //navigate("/groupproject/checkout/confirm");
 
-        width: "100%", // Adjust the width as needed
-        height: "auto", // Adjust the height as needed
-        border: "2px solid #ccc", // Example border styling
-        borderRadius: "8px", // Example border-radius
-      }}/>
-      <button onClick={startCamera} 
-      style={{
-                textAlign: "center",
-                backgroundColor: "#3D69E1",
-                color: "white",
-                border: "none",
-                borderRadius: "4px",
-                padding: "8px",}}   >Start Camera</button>
-      <button onClick={captureImage} 
-      style={{
-                backgroundColor: "#3D69E1",
-                color: "white",
-                border: "none",
-                borderRadius: "4px",
-                padding: "8px",}}>Capture and Recognize</button>
-      {image && <img src={image} alt="Captured" />}
-    </div>
+            }}>Signup</button>
+            <button style={{
+              backgroundColor: "#3d69e1",
+              color: "white",
+              border: "none",
+              borderRadius: "4px",
+              padding: "8px",
+            
+            }} onClick={() => {
+              setShowModal(false);
+            }}>Cancel</button>
+          </div>
+        </div>
+        </Modal>
     </StyledCheckoutPage>
   );
-}
+};
 
+export default RegisterFacePage;

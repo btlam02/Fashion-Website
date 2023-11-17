@@ -82,7 +82,7 @@ def face_register():
             email = data.get('email')
             password = data.get('password')
             image = data.get('image')
-
+            
             hash_password = generate_password_hash(password)
 
             new_user = User(email=email, password=hash_password, role ='user', image = image)
