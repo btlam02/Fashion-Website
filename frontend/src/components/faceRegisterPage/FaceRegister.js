@@ -321,6 +321,13 @@ export default function FaceRegisterPage() {
         border: "2px solid #ccc", // Example border styling
         borderRadius: "8px", // Example border-radius
       }}/>
+      <div style={{
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        gap: "16px",
+      }}>
       <button onClick={startCamera} 
       style={{
                 textAlign: "center",
@@ -335,8 +342,38 @@ export default function FaceRegisterPage() {
                 color: "white",
                 border: "none",
                 borderRadius: "4px",
-                padding: "8px",}}>Capture and Recognize</button>
-      {image && <img src={image} alt="Captured" />}
+                padding: "8px",}}>Capture</button>
+      </div>
+      {image && <img src={image} alt="Captured" style={{
+        width: "100%", // Adjust the width as needed
+        height: "auto", // Adjust the height as needed
+        border: "2px solid #ccc", // Example border styling
+        borderRadius: "8px", // Example border-radius
+        // center the image
+        display: "block",
+        marginLeft: "auto",
+        marginRight: "auto",
+        marginTop: "16px",
+        width: "80%",
+      }}/>}
+      {image && <button onClick={() => {
+              navigate("/groupproject/checkout/confirm");
+            }
+            }
+      style={{
+                backgroundColor: "#3D69E1",
+                color: "white",
+                border: "none",
+                borderRadius: "4px",
+                marginTop: "16px",
+                padding: "8px",
+                // center the button
+                display: "block",
+                marginLeft: "auto",
+                marginRight: "auto",
+                width: "80%",
+              }}>Login</button>
+      }
     </div>
     </StyledCheckoutPage>
   );
