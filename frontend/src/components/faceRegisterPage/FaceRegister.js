@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import styled from "styled-components";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Modal } from "@mui/material";
+
+
 
 const StyledCheckoutPage = styled.div`
   * {
@@ -190,13 +191,18 @@ const modalStyle = {
     },
   };
 
-export default function FaceLoginPage() {
-  const [justChecking, setJustChecking] = useState(false);
+
+
+export default function FaceRegisterPage() {
+  const [email, setEmail] = useState("");
   const [valid, setValid] = useState(true);
+  const [error, setError] = useState(null);
+  const [justChecking, setJustChecking] = useState(false);
+  const [image, setImage] = useState(null)
   const [showModal, setShowModal] = useState(false);
-
+  const videoRef = useRef(null); 
+  
   const navigate = useNavigate();
-
   const validateEmail = () => {
     let regexp =
       /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -208,24 +214,45 @@ export default function FaceLoginPage() {
     return false;
   };
 
-  const [email, setEmail] = useState("");
+  const startCamera = async ()=>{
+    const stream = await navigator.mediaDevices.getUserMedia({video:true}); 
+    videoRef.current.srcObject = stream; 
+  }; 
 
-  const sendRequest = async () => {
-    const response = await axios.post(
-      "http://localhost:5000/facelogin",
-      {
-        email: email,
-      }
-    );
-    console.log(response);
+  const captureImage = async () => {
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    canvas.width = videoRef.current.videoWidth;
+    canvas.height = videoRef.current.videoHeight;
+    context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
+    const dataUrl = canvas.toDataURL('image/jpeg');
+    setImage(dataUrl);
+
+    try {
+        const response = await fetch('http://localhost:5000/faceregister', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email: email, image: dataUrl }),
+          });
+    
+          if (response.ok) {
+            const result = await response.json();
+            console.log(result.message); 
+          } else {
+            console.error('Facial recognition failed');
+          }
+    } catch (error) {
+      console.error("Error:", error);
+      setError("An error occurred while processing the request.");
+    }
   };
-
-
 
   return (
     <StyledCheckoutPage valid={valid} justChecking={justChecking}>
-      <div className='checkout-sign-in'>
-        <h1>Sign In by Face</h1>
+    {/* <div className='checkout-sign-in'>
+        <h1>Sign Up by Face</h1>
         <p className='checkout-email-sign-in-title'>
           Email Address <button className='email-info-button'>i</button>
         </p>
@@ -242,7 +269,9 @@ export default function FaceLoginPage() {
         <button
           className='checkout-sign-in-button'
           onClick={() => {
+            <video ref={videoRef} autoPlay />
             validateEmail() && setShowModal(true);
+            startCamera() && captureImage(); 
           }}
         >
           CONTINUE
@@ -255,7 +284,7 @@ export default function FaceLoginPage() {
         }}>
           If you don't have an account, you can register here.
         </p>
-        <button onClick={() => navigate("/groupproject/signup")}>REGISTER HERE</button>
+        <button onClick={() => navigate("/groupproject/signup")}>REGISTER NORMAL HERE</button>
       </div>
       <Modal
         open={showModal}
@@ -271,8 +300,8 @@ export default function FaceLoginPage() {
             backgroundColor: "white",
             borderRadius: "4px",
         }}>
-          <h1>Face Login</h1>
-          <p>Face Login is not available at this time.</p>
+          <h1>Face Register</h1>
+          <p>Face Register is not available at this time.</p>
           <button onClick={() => setShowModal(false)} style={{
                 backgroundColor: "#3D69E1",
                 color: "white",
@@ -281,7 +310,35 @@ export default function FaceLoginPage() {
                 padding: "8px",
           }}>OK</button>
         </div>
-        </Modal>
+        </Modal> */}
+    
+    <div>
+      <video ref={videoRef} autoPlay 
+      style={{
+
+        width: "100%", // Adjust the width as needed
+        height: "auto", // Adjust the height as needed
+        border: "2px solid #ccc", // Example border styling
+        borderRadius: "8px", // Example border-radius
+      }}/>
+      <button onClick={startCamera} 
+      style={{
+                textAlign: "center",
+                backgroundColor: "#3D69E1",
+                color: "white",
+                border: "none",
+                borderRadius: "4px",
+                padding: "8px",}}   >Start Camera</button>
+      <button onClick={captureImage} 
+      style={{
+                backgroundColor: "#3D69E1",
+                color: "white",
+                border: "none",
+                borderRadius: "4px",
+                padding: "8px",}}>Capture and Recognize</button>
+      {image && <img src={image} alt="Captured" />}
+    </div>
     </StyledCheckoutPage>
   );
 }
+

@@ -2,7 +2,6 @@ import React from "react";
 import styled from "styled-components";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import httpClient from "../../httpClient";
 
 const StyledCheckoutPage = styled.div`
   * {
@@ -175,31 +174,7 @@ export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [valid, setValid] = useState(true);
-<<<<<<< HEAD
-
-  const register = async () => {
-    await fetch(
-      "http://127.0.0.1:5000/register",
-      {
-        method: "POST",
-        body: JSON.stringify({
-          email: email,
-          password: password,
-        }),
-        headers: {
-          "Content-type": "application/json",
-        },
-      }
-    ).then((response) => {
-      navigate("/groupproject");
-      console.log(response);
-    }).catch((err) => {
-      console.log(err);
-    })
-  }
-=======
   const [error, setError] = useState(null);
->>>>>>> 405c8dc (Authenticate Working)
 
   const navigate = useNavigate();
 
@@ -240,32 +215,6 @@ export default function RegisterPage() {
     }
   };
 
-// export default function RegisterPage() {
-//   const [justChecking, setJustChecking] = useState(false);
-//   const [email, setEmail] = useState("");
-//   const [password, setPassword] = useState("");
-//   const [valid, setValid] = useState(true);
-
-//   const register = async () => {
-//     await fetch("http://127.0.0.1:5000/register", {
-//       method: "POST",
-//       body: JSON.stringify({ email: email, password: password }),
-//     })
-//       .then((res) => res.json()).catch((err) => console.log(err));
-//   }
-
-//   const navigate = useNavigate();
-
-//   const validateEmail = () => {
-//     let regexp =
-//       /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-//     if (email.length) {
-//       setValid(regexp.test(String(email).toLowerCase()));
-//       return true;
-//     }
-//     setValid(false);
-//     return false;
-//   };
 
   return (
     <StyledCheckoutPage valid={valid} justChecking={justChecking}>

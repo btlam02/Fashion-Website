@@ -219,20 +219,6 @@ export default function LoginPage() {
   };
 
   const sendRequest = async () => {
-<<<<<<< HEAD
-    await axios
-      .post("http://127.0.0.1:5000/login", {
-        email: email,
-        password: password,
-      })
-      .then((res) => {
-        console.log(res.data);
-        navigate("/groupproject");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-=======
     try {
       if (validateEmail()) {
         const response = await fetch("http://127.0.0.1:5000/login", {
@@ -256,7 +242,6 @@ export default function LoginPage() {
       console.error("Error:", error);
       setError("Đã xảy ra lỗi trong quá trình xử lý yêu cầu.");
     }
->>>>>>> 405c8dc (Authenticate Working)
   };
 
   return (
@@ -311,3 +296,5 @@ export default function LoginPage() {
     </StyledCheckoutPage>
   );
 }
+
+

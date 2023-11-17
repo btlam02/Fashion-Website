@@ -20,9 +20,15 @@ class User(db.Model):
     email = db.Column(db.String(100), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
     role = db.Column(db.String(50), nullable = False)
+    avatar = db.Column(db.LargeBinary)
 
     def __repr__(self):
         return f'<User {self.email}>'
+
+
+
+
+
 
 # Route để xử lý yêu cầu đăng ký người dùng
 @app.route('/register', methods=['POST'])
@@ -67,6 +73,34 @@ def login():
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+
+@app.route('/faceregister')
+def face_register(): 
+    try:
+            data = request.get_json()
+            email = data.get('email')
+            password = data.get('password')
+            image = data.get('image')
+
+            hash_password = generate_password_hash(password)
+
+            new_user = User(email=email, password=hash_password, role ='user', image = image)
+            db.session.add(new_user)
+            db.session.commit()
+            
+            return jsonify({'message': 'Đăng ký thành công!'}), 201
+
+    except IntegrityError:
+            db.session.rollback()
+            return jsonify({'error': 'Email đã tồn tại!'}), 409
+    except Exception as e:
+            db.session.rollback()
+            return jsonify({'error': str(e)}), 500
+
+
+
+
 
 if __name__ == '__main__':
     db.create_all()
