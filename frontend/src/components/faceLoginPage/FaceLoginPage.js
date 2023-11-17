@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Modal } from "@mui/material";
+import Webcam from "react-webcam";
 
 const StyledCheckoutPage = styled.div`
   * {
@@ -272,14 +273,36 @@ export default function FaceLoginPage() {
             borderRadius: "4px",
         }}>
           <h1>Face Login</h1>
-          <p>Face Login is not available at this time.</p>
-          <button onClick={() => setShowModal(false)} style={{
-                backgroundColor: "#3D69E1",
-                color: "white",
-                border: "none",
-                borderRadius: "4px",
-                padding: "8px",
-          }}>OK</button>
+          <Webcam />
+          <div style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: "16px",
+          }}>
+            <button style={{
+              backgroundColor: "#3d69e1",
+              color: "white",
+              border: "none",
+              borderRadius: "4px",
+              padding: "8px",
+            
+            }} onClick={() => {
+              setShowModal(false);
+              navigate("/groupproject/checkout/confirm");
+            }}>Login</button>
+            <button style={{
+              backgroundColor: "#3d69e1",
+              color: "white",
+              border: "none",
+              borderRadius: "4px",
+              padding: "8px",
+            
+            }} onClick={() => {
+              setShowModal(false);
+            }}>Cancel</button>
+          </div>
         </div>
         </Modal>
     </StyledCheckoutPage>
