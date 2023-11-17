@@ -214,6 +214,28 @@ export default function FaceRegisterPage() {
     return false;
   };
 
+  const registerFace = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/faceregister', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: email, image: image }),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log(result.message); 
+      } else {
+        console.error('Facial recognition failed');
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      setError("An error occurred while processing the request.");
+    }
+  }
+
   const startCamera = async ()=>{
     const stream = await navigator.mediaDevices.getUserMedia({video:true}); 
     videoRef.current.srcObject = stream; 
@@ -357,6 +379,7 @@ export default function FaceRegisterPage() {
         width: "80%",
       }}/>}
       {image && <button onClick={() => {
+              // registerFace();
               navigate("/groupproject/checkout/confirm");
             }
             }
