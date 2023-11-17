@@ -191,7 +191,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
 
   const sendRequest = async () => {
-    await fetch("http://localhost:5000/api/login", {
+    await fetch("http://127.0.0.1:5000/login", {
       method: "POST",
       body: JSON.stringify({ email: email, password: password }),
     })

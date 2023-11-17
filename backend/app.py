@@ -20,37 +20,41 @@ login_manager.init_app(app=app)
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(50), unique=True, nullable=False)
-    username = db.Column(db.String(50), unique=True, nullable=False)
+    email = db.Column(db.String(100), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
-    role = db.Column(db.String(20), nullable=False, default ='user')
+    role = db.Column(db.String(50), nullable=False)
 
 
-
-
-@app.route('/register', methods=['GET', 'POST'])
+@app.route('/register', methods=['POST'])
 def register():
-    if request.method == 'POST':
-        email = request.form['email']
-        username = request.form['username']
-        password = request.form['password']
+    try:
+        data = request.get_json(force=True)
+        email = data.get('email')
+        password = data.get('password')
+        print(data)
+        # Your login authentication logic here
+         # Kiểm tra xem email đã tồn tại trong cơ sở dữ liệu hay chưa
+        existing_user = User.query.filter_by(email=email).first()
 
-        # Kiểm tra xem người dùng đã tồn tại hay chưa
-        existing_user = User.query.filter_by(username=username).first()
         if existing_user:
-            flash("Username already exists")
-            return render_template('register.html')
+            print('Email already exists!')
+            return jsonify({'message': 'Email already exists!'})
 
-        # Tạo người dùng mới và lưu vào cơ sở dữ liệu
+        # Mã hóa mật khẩu trước khi lưu vào cơ sở dữ liệu
         hashed_password = generate_password_hash(password)
-        new_user = User(email = email,username=username, password=hashed_password, role='user')
+
+        # Tạo một user mới
+        new_user = User(email=email, password=hashed_password, role = 'user')
+
+        # Thêm user mới vào cơ sở dữ liệu
         db.session.add(new_user)
         db.session.commit()
+        return jsonify({'message': 'Registration successful'})
 
-        return redirect(url_for('login'))
-    return render_template('register.html')
-
-
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    
+   
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -58,49 +62,35 @@ def load_user(user_id):
 
 
 
-@app.route('/login', methods=['GET', 'POST'])
+# @app.route('/login', methods=['GET', 'POST'])
+# def login():
+#     if request.method == 'POST':
+#         username = request.form['username']
+#         password = request.form['password']
+#         user = User.query.filter_by(username=username).first()
+
+#         if user:
+#             if check_password_hash(user.password, password):
+#                 login_user(user)
+#                 return redirect(url_for('home'))
+#         return render_template('login.html', message='Invalid username or password')
+#     return render_template('login.html')
+
+
+@app.route('/login', methods=['POST'])
 def login():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        user = User.query.filter_by(username=username).first()
 
-        if user:
-            if check_password_hash(user.password, password):
-                login_user(user)
-                return redirect(url_for('home'))
-        return render_template('login.html', message='Invalid username or password')
-    return render_template('login.html')
+    data = request.get_json(force=True)
+    email = data.get('email')
+    password = data.get('password')
 
+    # Retrieve user from the database based on the provided email
+    user = User.query.filter_by(email=email).first()
 
-
-# Đường dẫn đăng xuất
-@app.route('/logout')
-@login_required
-def logout():
-    logout_user()
-    return redirect(url_for('home_base'))
-
-
-
-# Đường dẫn bảng điều khiển
-@app.route('/home')
-@login_required
-def home():
-    if current_user.role == 'admin':
-        # Trang bảng điều khiển cho admin
-        return render_template('./admin/home_admin.html')
+    if user and check_password_hash (user.password,password):  # Validate the password
+        return jsonify({'message': 'Login successful'})
     else:
-        # Trang bảng điều khiển cho user
-        return render_template('./user/home_user.html')
-
-
-
-@app.route('/')
-def home_base(): 
-    return render_template('home.html')
-
-
+        return jsonify({'message': 'Invalid credentials'})
 
 
 if __name__ == '__main__':

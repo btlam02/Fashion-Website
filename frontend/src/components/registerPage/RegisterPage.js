@@ -177,7 +177,7 @@ export default function RegisterPage() {
   const [valid, setValid] = useState(true);
 
   const register = async () => {
-    await fetch("url", {
+    await fetch("http://127.0.0.1:5000/register", {
       method: "POST",
       body: JSON.stringify({ email: email, password: password }),
     })
