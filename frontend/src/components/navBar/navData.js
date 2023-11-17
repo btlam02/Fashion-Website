@@ -17,33 +17,33 @@ import drinkWare from "../../assets/images/lifestyle-drinkware.avif";
 import outdoorTech from "../../assets/images/lifestyle-outdoor-tech.avif";
 
 export const navList = [
-  {
-    category: "Charging",
-    subCategories: [
-      { title: "At Home", image: atHome },
-      { title: "On The Road", image: onTheRoad },
-      { title: "Parts", image: parts },
-    ],
-    promo: { title: "Wall Connector", image: wallConnector },
-  },
-  {
-    category: "Vehicle Accessories",
-    subCategories: [
-      { title: "Model S", image: modelS },
-      { title: "Model 3", image: model3 },
-      { title: "Model X", image: modelX },
-      { title: "Model Y", image: modelY },
-    ],
-    options: [
-      "Best Sellers",
-      "Interior",
-      "Exterior",
-      "Wheels and Tires",
-      "Floor Mats",
-      "Parts",
-      "Keys",
-    ],
-  },
+  // {
+  //   category: "Charging",
+  //   subCategories: [
+  //     { title: "At Home", image: atHome },
+  //     { title: "On The Road", image: onTheRoad },
+  //     { title: "Parts", image: parts },
+  //   ],
+  //   promo: { title: "Wall Connector", image: wallConnector },
+  // },
+  // {
+  //   category: "Vehicle Accessories",
+  //   subCategories: [
+  //     { title: "Model S", image: modelS },
+  //     { title: "Model 3", image: model3 },
+  //     { title: "Model X", image: modelX },
+  //     { title: "Model Y", image: modelY },
+  //   ],
+  //   options: [
+  //     "Best Sellers",
+  //     "Interior",
+  //     "Exterior",
+  //     "Wheels and Tires",
+  //     "Floor Mats",
+  //     "Parts",
+  //     "Keys",
+  //   ],
+  // },
   {
     category: "Apparel",
     subCategories: [

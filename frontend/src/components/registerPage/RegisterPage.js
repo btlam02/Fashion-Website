@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import httpClient from "../../httpClient";
 
 const StyledCheckoutPage = styled.div`
   * {
@@ -177,11 +177,24 @@ export default function RegisterPage() {
   const [valid, setValid] = useState(true);
 
   const register = async () => {
-    await fetch("http://127.0.0.1:5000/register", {
-      method: "POST",
-      body: JSON.stringify({ email: email, password: password }),
+    await fetch(
+      "http://127.0.0.1:5000/register",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          email: email,
+          password: password,
+        }),
+        headers: {
+          "Content-type": "application/json",
+        },
+      }
+    ).then((response) => {
+      navigate("/groupproject");
+      console.log(response);
+    }).catch((err) => {
+      console.log(err);
     })
-      .then((res) => res.json()).catch((err) => console.log(err));
   }
 
   const navigate = useNavigate();

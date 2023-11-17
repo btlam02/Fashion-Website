@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import httpClient from "../../httpClient";
 
 const StyledCheckoutPage = styled.div`
   * {
@@ -191,11 +192,18 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
 
   const sendRequest = async () => {
-    await fetch("http://127.0.0.1:5000/login", {
-      method: "POST",
-      body: JSON.stringify({ email: email, password: password }),
-    })
-      .then((res) => res.json()).catch((err) => console.log(err));
+    await axios
+      .post("http://127.0.0.1:5000/login", {
+        email: email,
+        password: password,
+      })
+      .then((res) => {
+        console.log(res.data);
+        navigate("/groupproject");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
