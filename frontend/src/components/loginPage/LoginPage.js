@@ -171,9 +171,39 @@ const StyledCheckoutPage = styled.div`
   }
 `;
 
+// export default function LoginPage() {
+//   const [justChecking, setJustChecking] = useState(false);
+//   const [valid, setValid] = useState(true);
+
+//   const navigate = useNavigate();
+
+//   const validateEmail = () => {
+//     let regexp =
+//       /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+//     if (email.length) {
+//       setValid(regexp.test(String(email).toLowerCase()));
+//       return true;
+//     }
+//     setValid(false);
+//     return false;
+//   };
+
+//   const [email, setEmail] = useState("");
+//   const [password, setPassword] = useState("");
+
+//   const sendRequest = async () => {
+//     await fetch("http://127.0.0.1:5000/login", {
+//       method: "POST",
+//       body: JSON.stringify({ email: email, password: password }),
+//     })
+//       .then((res) => res.json()).catch((err) => console.log(err));
+//   };
 export default function LoginPage() {
-  const [justChecking, setJustChecking] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [valid, setValid] = useState(true);
+  const [error, setError] = useState(null);
+  const [justChecking, setJustChecking] = useState(false);
 
   const navigate = useNavigate();
 
@@ -188,10 +218,8 @@ export default function LoginPage() {
     return false;
   };
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
   const sendRequest = async () => {
+<<<<<<< HEAD
     await axios
       .post("http://127.0.0.1:5000/login", {
         email: email,
@@ -204,6 +232,31 @@ export default function LoginPage() {
       .catch((err) => {
         console.log(err);
       });
+=======
+    try {
+      if (validateEmail()) {
+        const response = await fetch("http://127.0.0.1:5000/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email: email, password: password }),
+        });
+
+        if (response.ok) {
+          // Đăng nhập thành công, thực hiện các thao tác cần thiết
+          navigate("/groupproject"); // Chuyển hướng đến trang sau khi đăng nhập thành công
+        } else {
+          // Xử lý lỗi khi đăng nhập không thành công
+          const errorData = await response.json();
+          setError(errorData.error || "Đăng nhập không thành công!");
+        }
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      setError("Đã xảy ra lỗi trong quá trình xử lý yêu cầu.");
+    }
+>>>>>>> 405c8dc (Authenticate Working)
   };
 
   return (

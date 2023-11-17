@@ -1,100 +1,73 @@
-from flask import Flask, request, jsonify,render_template, flash, redirect, session, url_for
+from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
-#requirements for database connection 
+from sqlalchemy.exc import IntegrityError
 import os
 
 app = Flask(__name__)
+CORS(app)
 app.secret_key = os.getenv("SECRET_KEY")
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
+# Thiết lập kết nối với cơ sở dữ liệu PostgreSQL
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:050702@localhost/Fashion'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-
-# Flask - Login
-login_manager = LoginManager()
-login_manager.init_app(app=app)
-
-
-class User(UserMixin, db.Model):
+class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(100), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
-    role = db.Column(db.String(50), nullable=False)
+    role = db.Column(db.String(50), nullable = False)
 
+    def __repr__(self):
+        return f'<User {self.email}>'
 
+# Route để xử lý yêu cầu đăng ký người dùng
 @app.route('/register', methods=['POST'])
 def register():
     try:
-        data = request.get_json(force=True)
+        data = request.get_json()
         email = data.get('email')
         password = data.get('password')
-        print(data)
-        # Your login authentication logic here
-         # Kiểm tra xem email đã tồn tại trong cơ sở dữ liệu hay chưa
-        existing_user = User.query.filter_by(email=email).first()
 
-        if existing_user:
-            print('Email already exists!')
-            return jsonify({'message': 'Email already exists!'})
+        hash_password = generate_password_hash(password)
 
-        # Mã hóa mật khẩu trước khi lưu vào cơ sở dữ liệu
-        hashed_password = generate_password_hash(password)
-
-        # Tạo một user mới
-        new_user = User(email=email, password=hashed_password, role = 'user')
-
-        # Thêm user mới vào cơ sở dữ liệu
+        new_user = User(email=email, password=hash_password, role ='user')
         db.session.add(new_user)
         db.session.commit()
-        return jsonify({'message': 'Registration successful'})
+        
+        return jsonify({'message': 'Đăng ký thành công!'}), 201
+
+    except IntegrityError:
+        db.session.rollback()
+        return jsonify({'error': 'Email đã tồn tại!'}), 409
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
+
+# Route để xử lý yêu cầu đăng nhập
+@app.route('/login', methods=['POST'])
+def login():
+    try:
+        data = request.get_json()
+        email = data.get('email')
+        password = data.get('password')
+
+        if not email or not password:
+            return jsonify({'message': 'Email and password are required!'}), 400
+
+        user = User.query.filter_by(email=email).first()
+
+        if user and check_password_hash(user.password, password):
+            return jsonify({'message': 'Login successful'}), 200
+        else:
+            return jsonify({'message': 'Invalid credentials'}), 401
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-    
-   
-
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
-
-
-
-# @app.route('/login', methods=['GET', 'POST'])
-# def login():
-#     if request.method == 'POST':
-#         username = request.form['username']
-#         password = request.form['password']
-#         user = User.query.filter_by(username=username).first()
-
-#         if user:
-#             if check_password_hash(user.password, password):
-#                 login_user(user)
-#                 return redirect(url_for('home'))
-#         return render_template('login.html', message='Invalid username or password')
-#     return render_template('login.html')
-
-
-@app.route('/login', methods=['POST'])
-def login():
-
-    data = request.get_json(force=True)
-    email = data.get('email')
-    password = data.get('password')
-
-    # Retrieve user from the database based on the provided email
-    user = User.query.filter_by(email=email).first()
-
-    if user and check_password_hash (user.password,password):  # Validate the password
-        return jsonify({'message': 'Login successful'})
-    else:
-        return jsonify({'message': 'Invalid credentials'})
-
 
 if __name__ == '__main__':
     db.create_all()
-    app.run(debug=True)
-
-
+    app.run(host='127.0.0.1', port=5000)
