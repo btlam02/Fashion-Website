@@ -191,14 +191,11 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
 
   const sendRequest = async () => {
-    const response = await axios.post(
-      "http://localhost:5000/groupproject/api/login",
-      {
-        email: email,
-        password: password,
-      }
-    );
-    console.log(response);
+    await fetch("http://localhost:5000/api/login", {
+      method: "POST",
+      body: JSON.stringify({ email: email, password: password }),
+    })
+      .then((res) => res.json()).catch((err) => console.log(err));
   };
 
   return (

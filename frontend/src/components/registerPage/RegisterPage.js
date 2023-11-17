@@ -176,18 +176,12 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const [valid, setValid] = useState(true);
 
-  const register = () => {
-    axios
-      .post("http://localhost:5000/api/users/register", {
-        email: email,
-        password: password,
-      })
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((error) => {
-        console.log(error.response);
-      });
+  const register = async () => {
+    await fetch("url", {
+      method: "POST",
+      body: JSON.stringify({ email: email, password: password }),
+    })
+      .then((res) => res.json()).catch((err) => console.log(err));
   }
 
   const navigate = useNavigate();
