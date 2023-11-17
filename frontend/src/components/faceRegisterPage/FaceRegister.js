@@ -214,6 +214,28 @@ const RegisterFacePage = () => {
     return false;
   };
 
+  const registerFace = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/faceregister', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: email, image: image }),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log(result.message); 
+      } else {
+        console.error('Facial recognition failed');
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      setError("An error occurred while processing the request.");
+    }
+  }
+
   const sendRequest = async () => {
     try {
         if (validateEmail()) {
@@ -298,41 +320,44 @@ const RegisterFacePage = () => {
             backgroundColor: "white",
             borderRadius: "4px",
         }}>
-          <h1>Face Sign Up</h1>
-          <Webcam />
-          <div style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-            gap: "16px",
-          }}>
-            <button style={{
-              backgroundColor: "#3d69e1",
-              color: "white",
-              border: "none",
-              borderRadius: "4px",
-              padding: "8px",
-            
-            }} onClick={() => {
-              setShowModal(false);
-              sendRequest();
-              //navigate("/groupproject/checkout/confirm");
-
-            }}>Signup</button>
-            <button style={{
-              backgroundColor: "#3d69e1",
-              color: "white",
-              border: "none",
-              borderRadius: "4px",
-              padding: "8px",
-            
-            }} onClick={() => {
-              setShowModal(false);
-            }}>Cancel</button>
-          </div>
+          <h1>Face Register</h1>
+          <p>Face Register is not available at this time.</p>
+          <button onClick={() => setShowModal(false)} style={{
+                backgroundColor: "#3D69E1",
+                color: "white",
+                border: "none",
+                borderRadius: "4px",
+                padding: "8px",
+          }}>OK</button>
         </div>
-        </Modal>
+        </Modal> */}
+    
+    <div>
+      <video ref={videoRef} autoPlay 
+      style={{
+
+        width: "100%", // Adjust the width as needed
+        height: "auto", // Adjust the height as needed
+        border: "2px solid #ccc", // Example border styling
+        borderRadius: "8px", // Example border-radius
+      }}/>
+      <button onClick={startCamera} 
+      style={{
+                textAlign: "center",
+                backgroundColor: "#3D69E1",
+                color: "white",
+                border: "none",
+                borderRadius: "4px",
+                padding: "8px",}}   >Start Camera</button>
+      <button onClick={captureImage} 
+      style={{
+                backgroundColor: "#3D69E1",
+                color: "white",
+                border: "none",
+                borderRadius: "4px",
+                padding: "8px",}}>Capture and Recognize</button>
+      {image && <img src={image} alt="Captured" />}
+    </div>
     </StyledCheckoutPage>
   );
 };
