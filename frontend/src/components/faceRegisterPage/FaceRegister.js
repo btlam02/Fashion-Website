@@ -330,33 +330,33 @@ const RegisterFacePage = () => {
                 padding: "8px",
           }}>OK</button>
         </div>
-        </Modal> */}
+        </Modal> 
     
     <div>
-      <video ref={videoRef} autoPlay 
+      {/* <video ref={videoRef} autoPlay 
       style={{
 
         width: "100%", // Adjust the width as needed
         height: "auto", // Adjust the height as needed
         border: "2px solid #ccc", // Example border styling
         borderRadius: "8px", // Example border-radius
-      }}/>
-      <button onClick={startCamera} 
+      }}/> */}
+      {/* <button onClick={startCamera} 
       style={{
                 textAlign: "center",
                 backgroundColor: "#3D69E1",
                 color: "white",
                 border: "none",
                 borderRadius: "4px",
-                padding: "8px",}}   >Start Camera</button>
-      <button onClick={captureImage} 
+                padding: "8px",}}   >Start Camera</button> */}
+      {/* <button onClick={captureImage} 
       style={{
                 backgroundColor: "#3D69E1",
                 color: "white",
                 border: "none",
                 borderRadius: "4px",
                 padding: "8px",}}>Capture and Recognize</button>
-      {image && <img src={image} alt="Captured" />}
+      {image && <img src={image} alt="Captured" />} */}
     </div>
     </StyledCheckoutPage>
   );
