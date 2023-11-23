@@ -292,6 +292,9 @@ export default function LoginPage() {
           If you don't have an account, you can register here.
         </p>
         <button onClick={() => navigate("/groupproject/signup")}>REGISTER HERE</button>
+        
+        <p><button onClick={() => navigate("/groupproject/faceAuth")}>FACE OPTIONS</button> </p> 
+        
       </div>
     </StyledCheckoutPage>
   );

@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useNavigationType } from "react-router-dom";
 
 const script = document.createElement('script')
 script.type = 'text/javascript';
 script.async = true;
 script.src = 'https://cdn.faceio.net/fio.js';
 document.head.appendChild(script);
+
+
 
 const StyledCheckoutPage = styled.div`
   * {
@@ -195,6 +197,8 @@ const modalStyle = {
 
 
 function FaceAuth() {
+  const navigate = useNavigate(); 
+  const [error, setError] = useState(null);
   let faceio;
 
   useEffect(() => {
@@ -216,6 +220,7 @@ function FaceAuth() {
       Enrollment Date: ${response.timestamp}
       Gender: ${response.details.gender}
       Age Approximation: ${response.details.age}`);
+      navigate("/groupproject");
     } catch (error) {
       console.log(error);
     }
@@ -230,6 +235,7 @@ function FaceAuth() {
       console.log(` Unique Facial ID: ${response.facialId}
           PayLoad: ${response.payload}
           `);
+      navigate("/groupproject");
     } catch (error) {
       console.log(error);
     }
