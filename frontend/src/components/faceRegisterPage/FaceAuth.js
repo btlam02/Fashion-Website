@@ -235,7 +235,7 @@ function FaceAuth() {
       console.log(` Unique Facial ID: ${response.facialId}
           PayLoad: ${response.payload}
           `);
-      navigate("/groupproject");
+      navigate("/groupproject/checkout/confirm");
     } catch (error) {
       console.log(error);
     }

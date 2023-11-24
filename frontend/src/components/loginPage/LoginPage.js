@@ -204,7 +204,6 @@ export default function LoginPage() {
   const [valid, setValid] = useState(true);
   const [error, setError] = useState(null);
   const [justChecking, setJustChecking] = useState(false);
-
   const navigate = useNavigate();
 
   const validateEmail = () => {
@@ -231,7 +230,7 @@ export default function LoginPage() {
 
         if (response.ok) {
           // Đăng nhập thành công, thực hiện các thao tác cần thiết
-          navigate("/groupproject"); // Chuyển hướng đến trang sau khi đăng nhập thành công
+          navigate("/groupproject/checkout/confirm"); // Chuyển hướng đến trang sau khi đăng nhập thành công
         } else {
           // Xử lý lỗi khi đăng nhập không thành công
           const errorData = await response.json();
