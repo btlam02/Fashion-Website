@@ -11,6 +11,8 @@ import { OrderSummary } from "./OrderSummary";
 import { CartItem } from "./CartItem";
 import Footer from "../Footer";
 
+
+
 export default function Cart() {
   const cartEntities = useSelector(cartSelectors.selectEntities);
   const cartIds = useSelector(cartSelectors.selectIds);

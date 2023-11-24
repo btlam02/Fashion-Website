@@ -27,9 +27,6 @@ class User(db.Model):
 
 
 
-
-
-
 # Route để xử lý yêu cầu đăng ký người dùng
 @app.route('/register', methods=['POST'])
 def register():
@@ -75,33 +72,35 @@ def login():
         return jsonify({'error': str(e)}), 500
 
 
-@app.route('/faceregister')
-def face_register(): 
-    try:
-            data = request.get_json()
-            email = data.get('email')
-            password = data.get('password')
-            image = data.get('image')
+# @app.route('/faceregister')
+# def face_register(): 
+#     try:
+#             data = request.get_json()
+#             email = data.get('email')
+#             password = data.get('password')
+#             image = data.get('image')
             
-            hash_password = generate_password_hash(password)
+#             hash_password = generate_password_hash(password)
 
-            new_user = User(email=email, password=hash_password, role ='user', image = image)
-            db.session.add(new_user)
-            db.session.commit()
+#             new_user = User(email=email, password=hash_password, role ='user', image = image)
+#             db.session.add(new_user)
+#             db.session.commit()
             
-            return jsonify({'message': 'Đăng ký thành công!'}), 201
+#             return jsonify({'message': 'Đăng ký thành công!'}), 201
 
-    except IntegrityError:
-            db.session.rollback()
-            return jsonify({'error': 'Email đã tồn tại!'}), 409
-    except Exception as e:
-            db.session.rollback()
-            return jsonify({'error': str(e)}), 500
-
-
+#     except IntegrityError:
+#             db.session.rollback()
+#             return jsonify({'error': 'Email đã tồn tại!'}), 409
+#     except Exception as e:
+#             db.session.rollback()
+#             return jsonify({'error': str(e)}), 500
 
 
 
+@app.route('/signout',methods = ['POST'])
+def signout():  
+    return jsonify({'message':'Successfully Sign out'})
+    
 if __name__ == '__main__':
     db.create_all()
     app.run(host='127.0.0.1', port=5000)

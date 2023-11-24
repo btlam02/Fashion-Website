@@ -21,7 +21,9 @@ export const OrderSummary = () => {
       <h2>
         Subtotal <span>${cartTtl.toLocaleString("en-US")}</span>
       </h2>
-      <button className='checkoutButton' onClick={() => navigate("/groupproject/signin")}>
+      <button className='checkoutButton' onClick={() => 
+       
+        navigate("/groupproject/signin")}>
         CHECKOUT
       </button>
     </StyledOrderSummary>

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import httpClient from "../../httpClient";
+import { useAuth } from '../../AuthContext';
 
 const StyledCheckoutPage = styled.div`
   * {
@@ -205,6 +206,7 @@ export default function LoginPage() {
   const [error, setError] = useState(null);
   const [justChecking, setJustChecking] = useState(false);
   const navigate = useNavigate();
+  const { loggedIn, setLoggedIn } = useAuth(); 
 
   const validateEmail = () => {
     let regexp =
@@ -230,7 +232,10 @@ export default function LoginPage() {
 
         if (response.ok) {
           // Đăng nhập thành công, thực hiện các thao tác cần thiết
-          navigate("/groupproject/checkout/confirm"); // Chuyển hướng đến trang sau khi đăng nhập thành công
+          setLoggedIn(true);
+          alert("SIGN IN SUCCESSFULLY!");
+          navigate("/groupproject/checkout/confirm"); 
+          // Chuyển hướng đến trang sau khi đăng nhập thành công
         } else {
           // Xử lý lỗi khi đăng nhập không thành công
           const errorData = await response.json();

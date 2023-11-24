@@ -5,6 +5,7 @@ import arrow from "../../../assets/images/arrow.svg";
 import globe from "../../../assets/images/globe.svg";
 import { ReactComponent as SearchBtn } from "../../../assets/images/search.svg";
 import { Link, useNavigate } from "react-router-dom";
+import {useAuth} from '../../../AuthContext';
 
 const StyledSideMenu = styled.div`
   * {
@@ -177,7 +178,7 @@ export default function NavSideMenu({
   const [inputValue, setInputValue] = useState("");
   const [showSubCategories, setShowSubCategories] = useState(false);
   const [subCategories, setSubCategories] = useState([]);
-
+  const {loggedIn, setLoggedIn } = useAuth();
   const handleSubmit = (e) => {
     if (e.keyCode === 13) {
       navigate(`search/${inputValue}`);
@@ -198,7 +199,13 @@ export default function NavSideMenu({
     setShowSideMenu(false);
     setShowSubCategories(false);
   };
-
+   
+  const handleLogout = () => {
+    setLoggedIn(false); // Set loggedIn state to false on logout
+    // Optionally, perform any additional cleanup or logout logic here
+    
+    navigate("/groupproject"); // Redirect to the desired page after logout (e.g., home page)
+  };
   const mainNavLinks = navList.map((listItem, i) => (
     <li key={i} onClick={() => handleCategorySelect(listItem)}>
       {listItem.category}
@@ -266,6 +273,7 @@ export default function NavSideMenu({
             <div className='secondarySideMenuNav'>
               <ul>
                 <li>Shop FAQ</li>
+                {!loggedIn && (
                 <li onClick={() => (
                   setShowSideMenu(false),
                   navigate("/groupproject/signin")
@@ -273,6 +281,19 @@ export default function NavSideMenu({
                 >
                   Sign In
                 </li>
+                )}
+
+                {loggedIn && (
+                <li onClick={() => (
+                  setShowSideMenu(false),
+                  alert("SIGN OUT SUCCESSFULLY!"),
+                  handleLogout()
+                  //navigate("/groupproject")
+                  )}
+                >
+                  Sign Out
+                </li>
+                )}
                 <li className='languageSelector'>
                   <img src={globe} alt='' />
                   <div>

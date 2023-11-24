@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate, useNavigationType } from "react-router-dom";
+import { useAuth } from '../../AuthContext';
 
 const script = document.createElement('script')
 script.type = 'text/javascript';
@@ -199,6 +200,7 @@ const modalStyle = {
 function FaceAuth() {
   const navigate = useNavigate(); 
   const [error, setError] = useState(null);
+  const { loggedIn, setLoggedIn } = useAuth(); 
   let faceio;
 
   useEffect(() => {
@@ -220,7 +222,9 @@ function FaceAuth() {
       Enrollment Date: ${response.timestamp}
       Gender: ${response.details.gender}
       Age Approximation: ${response.details.age}`);
+      setLoggedIn(true);
       navigate("/groupproject");
+      alert("SIGN IN SUCCESSFULLY!");
     } catch (error) {
       console.log(error);
     }
@@ -235,7 +239,9 @@ function FaceAuth() {
       console.log(` Unique Facial ID: ${response.facialId}
           PayLoad: ${response.payload}
           `);
+      setLoggedIn(true);
       navigate("/groupproject/checkout/confirm");
+      alert("SIGN IN SUCCESSFULLY!");
     } catch (error) {
       console.log(error);
     }

@@ -10,8 +10,6 @@ import Checkout from "../components/checkoutPage/Checkout";
 import Confirmation from "../components/checkoutPage/Confirmation";
 import LoginPage from "../components/loginPage/LoginPage";
 import RegisterPage from "../components/registerPage/RegisterPage";
-import FaceLoginPage from "../components/faceLoginPage/FaceLoginPage";
-import FaceRegisterPage from "../components/faceRegisterPage/FaceRegister";
 import FaceAuth from "../components/faceRegisterPage/FaceAuth";
 
 export default function MyRouter() {
@@ -59,17 +57,6 @@ export default function MyRouter() {
             // exact
             path='/groupproject/signup'
             element={<RegisterPage />}
-          />
-          <Route
-            // exact
-            path='/groupproject/facelogin'
-            element={<FaceLoginPage />}
-          />
-
-          <Route
-            // exact
-            path='/groupproject/faceregister'
-            element={<FaceRegisterPage />}
           />
           <Route exact path='/groupproject/cart' element={<Cart />} />
           <Route path='/groupproject/faceAuth' element={<FaceAuth />} />
