@@ -11,6 +11,7 @@ import Confirmation from "../components/checkoutPage/Confirmation";
 import LoginPage from "../components/loginPage/LoginPage";
 import RegisterPage from "../components/registerPage/RegisterPage";
 import FaceAuth from "../components/faceRegisterPage/FaceAuth";
+import DeepArPage from "../components/deepArPage/DeepArPage";
 
 export default function MyRouter() {
   return (
@@ -60,6 +61,7 @@ export default function MyRouter() {
           />
           <Route exact path='/groupproject/cart' element={<Cart />} />
           <Route path='/groupproject/faceAuth' element={<FaceAuth />} />
+          <Route path='/groupproject/deepAr' element={<DeepArPage />} />
         </Route>
       </Routes>
     </Router>
